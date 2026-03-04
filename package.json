@@ -4,8 +4,8 @@
   "description": "FINAL - Private Cinematic Access System",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js"
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
