@@ -1,0 +1,27 @@
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: serif;
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#intro {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+input {
+  padding: 10px;
+  background: #000;
+  border: 1px solid #fff;
+  color: #fff;
+}
+button {
+  padding: 10px 20px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}

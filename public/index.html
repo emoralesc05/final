@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso Privado - FINAL</title>
+
+<style>
+  :root {
+    --curtain-color: #7a0000;
+    --accent-color: #ffffff;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'serif', Times, serif;
+  }
+
+  /* Telón */
+  .curtain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    pointer-events: none;
+  }
+
+  .curtain-side {
+    width: 50%;
+    height: 100%;
+    background-color: var(--curtain-color);
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(0,0,0,0.2) 41px,
+      rgba(0,0,0,0.2) 80px
+    );
+    transition: transform 1.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.5);
+  }
+
+  .opened .left { transform: translateX(-100%); }
+  .opened .right { transform: translateX(100%); }
+
+  /* Contenido principal */
+  .main-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s ease 1s;
+  }
+
+  .opened + .main-content {
+    opacity: 1;
+  }
+
+  /* Título con glow animado */
+  h1.final-title {
+    font-size: 8rem;
+    letter-spacing: 15px;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: pulseGlow 3s infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    from { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+    to   { text-shadow: 0 0 35px rgba(255,255,255,0.6); }
+  }
+
+  /* Caja login */
+  .login-box {
+    margin-top: 50px;
+    width: 300px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #444;
+    padding: 10px 0;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  input:focus {
+    border-color: #fff;
+  }
+
+  button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 12px 30px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: 0.3s;
+    width: 100%;
+  }
+
+  button:hover {
+    background: #ccc;
+    letter-spacing: 4px;
+  }
+
+  button:disabled {
+    background: #666;
+    cursor: not-allowed;
+    letter-spacing: 2px;
+  }
+
+  .message {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #ff5f5f;
+    min-height: 1em;
+  }
+
+  .security-note {
+    font-size: 10px;
+    opacity: 0.5;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body onload="openCurtains()">
+
+  <div class="curtain-container" id="curtains">
+    <div class="curtain-side left"></div>
+    <div class="curtain-side right"></div>
+  </div>
+
+  <div class="main-content">
+    <h1 class="final-title">FINAL</h1>
+    
+    <div class="login-box">
+      <input type="text" id="code" placeholder="CÓDIGO DE ACCESO" autocomplete="off">
+      <button id="enterBtn" onclick="validate()">Entrar</button>
+      <div class="message" id="message"></div>
+      <div class="security-note">Acceso monitoreado</div>
+    </div>
+  </div>
+
+<script>
+  function openCurtains() {
+    setTimeout(() => {
+      document.getElementById('curtains').classList.add('opened');
+    }, 500);
+  }
+
+  document.getElementById("code").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      validate();
+    }
+  });
+
+  async function validate() {
+    const code = document.getElementById("code").value;
+    const message = document.getElementById("message");
+    const button = document.getElementById("enterBtn");
+
+    if (!code) {
+      message.innerText = "Escribe un código.";
+      return;
+    }
+
+    button.disabled = true;
+    button.innerText = "Validando...";
+    message.innerText = "";
+
+    try {
+      const res = await fetch("/api/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = "/video.html";
+      } else {
+        message.innerText = "CÓDIGO INVÁLIDO O AGOTADO";
+      }
+
+    } catch (err) {
+      message.innerText = "ERROR DE CONEXIÓN";
+    }
+
+    button.disabled = false;
+    button.innerText = "Entrar";
+  }
+</script>
+
+</body>
+</html>

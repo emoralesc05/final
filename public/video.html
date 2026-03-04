@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINAL - Reproducción</title>
+
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    font-family: serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .video-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  iframe {
+    width: 90%;
+    height: 90%;
+    border: none;
+    box-shadow: 0 0 40px rgba(255,255,255,0.1);
+  }
+
+  /* Luces amarillas */
+  .cinema-lights {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255,223,120,0.9) 0%,
+      rgba(255,214,102,0.7) 40%,
+      rgba(255,200,80,0.4) 70%,
+      rgba(0,0,0,0.9) 100%
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #2b1d00;
+    font-size: 2rem;
+    z-index: 999;
+    opacity: 0;
+    animation: fadeInLights 4s ease forwards;
+  }
+
+  @keyframes fadeInLights {
+    to { opacity: 1; }
+  }
+
+  .message {
+    opacity: 0;
+    transition: opacity 3s ease;
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+  }
+
+  .dark-fade {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 4s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+  }
+
+  .final-text {
+    opacity: 0;
+    transition: opacity 4s ease;
+  }
+
+  .final-text h1 {
+    font-size: 2.5rem;
+    margin: 0;
+  }
+
+  .final-text p {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    opacity: 0.8;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="video-container">
+  <iframe 
+    src="https://drive.google.com/file/d/157RuXm-V_poyfh7iNiC9yp-KcGvJB62k/preview"
+    allow="autoplay"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<script>
+
+  // 59m 27s = 3,567,000 ms
+  const videoDuration = 3567000;
+
+  setTimeout(() => {
+    startEndingSequence();
+  }, videoDuration);
+
+  function startEndingSequence() {
+
+    const lights = document.createElement("div");
+    lights.className = "cinema-lights";
+
+    const msg1 = document.createElement("div");
+    msg1.className = "message";
+    msg1.innerText = "Gracias por quedarte hasta el final.";
+
+    const msg2 = document.createElement("div");
+    msg2.className = "message";
+    msg2.innerText = "Toda historia termina… pero no toda termina aquí.";
+    msg2.style.marginTop = "30px";
+
+    lights.appendChild(msg1);
+    lights.appendChild(msg2);
+    document.body.appendChild(lights);
+
+    // Mostrar primer mensaje
+    setTimeout(() => {
+      msg1.style.opacity = "1";
+    }, 1500);
+
+    // Mostrar segundo mensaje 10s después
+    setTimeout(() => {
+      msg2.style.opacity = "1";
+    }, 5500);
+
+    // 10s después apagar luces
+    setTimeout(() => {
+      fadeToBlack();
+    }, 9500);
+  }
+
+  function fadeToBlack() {
+
+    const dark = document.createElement("div");
+    dark.className = "dark-fade";
+
+    const finalText = document.createElement("div");
+    finalText.className = "final-text";
+    finalText.innerHTML = `
+      <h1>I'm always gonna love you</h1>
+      <p>Please, come back</p>
+    `;
+
+    dark.appendChild(finalText);
+    document.body.appendChild(dark);
+
+    // Oscurecer
+    setTimeout(() => {
+      dark.style.opacity = "1";
+    }, 100);
+
+    // Mostrar texto después de que esté completamente negro
+    setTimeout(() => {
+      finalText.style.opacity = "1";
+    }, 5000);
+  }
+
+</script>
+<button onclick="startEndingSequence()" 
+style="
+position:fixed;
+bottom:20px;
+right:20px;
+z-index:2000;
+padding:10px 15px;
+background:#222;
+color:white;
+border:1px solid #555;
+cursor:pointer;
+">
+Probar Final
+</button>
+</body>
+</html>
